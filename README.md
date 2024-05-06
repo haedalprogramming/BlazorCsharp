@@ -1,10 +1,12 @@
 # BlazorCsharp
 C# Blazor로 배우는 프론트엔드의 기초
 
+# Goal
+프론트엔드의 기초를 이해하고 Blazor를 이용하여 웹 어플리케이션을 만드는 실습을 한다.
+
 # Target
- - 프론트엔드 이해
- - Blazor 기초 사용법 익히기
- - Blazor를 이용한 피자 주문 웹앱 만들기
+ - 프론트엔드의 기초를 알고 싶은 사람
+ - Blazor의 사용법을 배우고 싶은 사람
 
 # Contents
 
