@@ -11,13 +11,17 @@ C# Blazor로 배우는 프론트엔드의 기초
 
 # Contents
 
- - 1일차 : Blazor 소개, C# 소개, 환경 구축
+ - [Frontend 1일차 : Web, Blazor 소개, HTML, CSS, JS, C# 베이직, 환경 구축](./day1/README.md)
+    - Web개발의 이해
     - Frontend 소개
     - Blazor 소개
-    - HTML, CSS, JS, C# 소개
+    - HTML 언어 베이직
+    - CSS 언어 베이직
+    - JS 언어 베이직
+    - C# 언어 베이직
     - 환경 설정
 
- - 2일차 : Blazor를 사용하여 웹앱 빌드
+ - [Frontend 2일차 : Blazor를 사용하여 웹앱 빌드](./day2/README.md)
     - Blazor를 사용한 웹 개발 소개
     - Blazor를 사용하여 첫 번째 웹앱 빌드
     - Blazor를 사용하여 할 일 목록 빌드
@@ -28,7 +32,7 @@ C# Blazor로 배우는 프론트엔드의 기초
     - Blazor를 통해 재사용 가능한 구성 요소 빌드
     - Blazor를 사용하여 커넥트 4게임 빌드
 
- - 3일차 : Pizza 주문 웹앱 만들기
+ - [Frontend 3일차 : Pizza 주문 웹앱 만들기](./day3/README.md)
     - Get started with components, create the app layout
     - Add customized pizzas to orders
     - Show order status
@@ -40,15 +44,7 @@ C# Blazor로 배우는 프론트엔드의 기초
     - Progressive Web App (PWA) features
     - Deploy your app to Azure
 
- - 4일차 : Azure App Service로 Azure에 웹 사이트 배포
-    - Azure 개발을 위한 개발 환경 준비
-    - Azure App Service를 사용하여 웹 애플리케이션 호스트
-    - Visual Studio를 사용하여 Azure에 웹앱 게시
-    - App Service 배포 슬롯을 사용하여 테스트 및 롤백하기 위해 웹앱 배포 스테이징
-    - App Service 강화 및 규모 확장을 통해 App Service 웹앱의 크기를 조정하여 효율적으로 요구 사항 충족
-    - App Service를 사용하여 컨테이너화된 웹앱 배포 및 실행
 
 # Reference
  - https://github.com/dotnet-presentations/blazor-workshop?tab=readme-ov-file
  - https://learn.microsoft.com/ko-kr/training/paths/build-web-apps-with-blazor/
- - https://learn.microsoft.com/ko-kr/training/paths/deploy-a-website-with-azure-app-service/
