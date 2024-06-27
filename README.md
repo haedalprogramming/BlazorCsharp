@@ -32,7 +32,7 @@ C# Blazor로 배우는 프론트엔드의 기초
    - Blazor를 통해 재사용 가능한 구성 요소 빌드
    - Blazor를 사용하여 커넥트 4게임 빌드
 
- - [Frontend 3일차 : ASP.NET Core Blazor fundamentals](./day3/README.md)
+ - [Frontend 3일차 : ASP.NET Core Blazor fundamentals and SignalR with Blazor](./day3/README.md)
    - Blazor fundamentals
       - Overview
       - Routing and navigation

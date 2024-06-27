@@ -1,7 +1,7 @@
-# Blazor를 사용하여 웹앱 빌드
+# Frontend 2일차 : Blazor를 사용하여 웹앱 빌드
 
 ## 학습 목표
- - 
+ - Blazor를 사용하여 웹앱을 개발
 
 ## 목차
  - [Blazor를 사용한 웹 개발 소개](./content/01_Blazor를_사용한_웹_개발_소개.md)
