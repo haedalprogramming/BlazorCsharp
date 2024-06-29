@@ -28,9 +28,9 @@ C# Blazor로 배우는 프론트엔드의 기초
    - [Blazor 웹앱에서 데이터와 상호 작용](./day2/content/04_Blazor_웹앱에서_데이터와_상호_작용.md)
    - [페이지, 라우팅 및 레이아웃을 사용하여 Blazor 탐색 개선](./day2/content/05_페이지_라우팅_및_레이아웃을_사용하여_Blazor_탐색_개선.md)
    - [Blazor 웹앱에서 폼 및 유효성 검사의 작동 방식 개선](./day2/content/06_Blazor_웹앱에서_폼_및_유효성_검사의_작동_방식_개선.md)
-   - Blazor 웹앱에 대한 풍부한 대화형 구성 요소 빌드
-   - Blazor를 통해 재사용 가능한 구성 요소 빌드
-   - Blazor를 사용하여 커넥트 4게임 빌드
+   - [Blazor 웹앱에 대한 풍부한 대화형 구성 요소 빌드](./day2/content/07_Blazor_웹앱에_대한_풍부한_대화형_구성_요소_빌드.md)
+   - [Blazor를 통해 재사용 가능한 구성 요소 빌드](./day2/content/08_Blazor를_통해_재사용_가능한_구성_요소_빌드.md)
+   - [Blazor를 사용하여 커넥트 4게임 빌드](./day2/content/09_Blazor를_사용하여_커넥트_4게임_빌드.md)
 
  - [Frontend 3일차 : ASP.NET Core Blazor fundamentals and SignalR with Blazor](./day3/README.md)
    - Blazor fundamentals
@@ -52,4 +52,4 @@ C# Blazor로 배우는 프론트엔드의 기초
 
 # Reference
  - https://github.com/dotnet-presentations/blazor-workshop?tab=readme-ov-file
- - https://learn.microsoft.com/ko-kr/training/paths/build-web-apps-with-blazor/
+ - https://learn.microsoft.com/en-us/training/paths/build-web-apps-with-blazor/
