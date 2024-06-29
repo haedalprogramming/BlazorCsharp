@@ -32,6 +32,11 @@
     - [게임 조각 배치 처리](#게임-조각-배치-처리)
     - [열 선택](#열-선택)
     - [승리 및 오류 처리](#승리-및-오류-처리)
+    - [요약](#요약)
+    - [과제](#과제)
+  - [연습 - 매개 변수를 사용하여 사용자 지정](#연습---매개-변수를-사용하여-사용자-지정)
+    - [매개변수를 사용하여 보드 커스터마이징하기](#매개변수를-사용하여-보드-커스터마이징하기)
+  - [요약](#요약-1)
   - [출처](#출처)
   - [다음](#다음)
 ---
@@ -561,9 +566,140 @@ Blazor에 대한 교육과 함께 이 자습서를 계속 진행하기 위해 �
     - `CurrentTurn` 속성은 `winnerMessage` 의 상태 및 `PlayerTurn` 속성을 `GameState` 기반으로 자동으로 계산됩니다.
     - `ResetStyle`은 `WinnerMessage`의 콘텐츠를 기반으로 계산됩니다. `winnerMessage`가 있는 경우 다시 설정 단추가 화면에 나타납니다.
  3. 조각을 플레이할 때 오류 메시지를 처리해 보겠습니다. 오류 메시지  를 지우는 줄을 추가한 다음, `PlayPiece` 메서드의  코드를 `try...catch` 블록으로 래핑하여 예외가 발생한 경우 `errorMessage`를 설정합니다.
+  ```C#
+  errorMessage = string.Empty;
+  try
+  {
+      var player = State.PlayerTurn;
+      var turn = State.CurrentTurn;
+      var landingRow = State.PlayPiece(col);
+      pieces[turn] = $"player{player} col{col} drop{landingRow}";
+  }
+  catch (ArgumentException ex)
+  {
+      errorMessage = ex.Message;
+  }
+  ```
+  오류 처리기 표시기는 간단하며 부트스트랩 CSS 프레임워크를 사용하여 위험 모드에서 오류를 표시합니다.<br/>![](../img/09_Blazor를_사용하여_커넥트_4게임_빌드/3-board-error-handler.png)
+ 4. 다음으로, 게임을 다시 시작하기 위해 단추가 트리거하는 ResetGame 메서드를 추가해 보겠습니다. 현재 게임을 다시 시작하는 유일한 방법은 페이지를 새로 고치는 것입니다. 이 코드를 사용하면 동일한 페이지를 유지할 수 있습니다.
+  ```C#
+  void ResetGame()
+  {
+      State.ResetBoard();
+      winnerMessage = string.Empty;
+      errorMessage = string.Empty;
+      pieces = new string[42];
+  }
+  ```
+  이제 ResetGame 메서드에는 다음과 같은 논리가 있습니다.
+     - 보드의 상태를 다시 설정합니다.
+     - 표시기를 숨깁니다.
+     - 조각 배열을 42개 문자열의 빈 배열로 다시 설정합니다.
+  이 업데이트를 통해 게임을 다시 플레이할 수 있으며, 이제 보드 바로 위에 플레이어의 차례와 최종적으로 게임이 완료되었음을 알리는 표시기가 표시됩니다.
+  <br/>![](../img/09_Blazor를_사용하여_커넥트_4게임_빌드/3-board-step-1.png)<br/>여전히 다시 설정 단추를 선택할 수 없는 상황입니다. `PlayPiece` 메서드에 몇 가지 논리를 추가하여 게임의 종료를 확인해 보겠습니다.
+ 5. `PlayPiece`의 `try...catch` 블록 뒤에 스위치 식을 추가하여 게임에 우승자가 있는지 확인합니다.
+```C#
+winnerMessage = State.CheckForWin() switch
+{
+    GameState.WinState.Player1_Wins => "Player 1 Wins!",
+    GameState.WinState.Player2_Wins => "Player 2 Wins!",
+    GameState.WinState.Tie => "It's a tie!",
+    _ => ""
+};
+```
+CheckForWin 메서드는 어떤 플레이어가 게임에서 이겼는지 또는 게임이 동률인지를 보고하는 열거형을 반환합니다. 이 스위치 식은 게임 오버 상태가 발생한 경우 winnerMessage 필드를 적절하게 설정합니다.
+이제 게임을 플레이하고 게임 종료 시나리오에 도달하면 다음 지표가 표시됩니다.
+![](../img/09_Blazor를_사용하여_커넥트_4게임_빌드/3-board-step-2.png)
 
+### 요약
 
+우리는 Blazor에 대해 많은 것을 배웠고 작은 게임을 만들었습니다. 학습한 몇 가지 기술은 다음과 같습니다.
 
+ - 구성 요소 만들기
+ - 해당 구성 요소를 홈페이지에 추가하기
+ - 종속성 주입을 사용하여 게임 상태 관리하기
+ - 게임을 이벤트 처리기와 상호 작용하여 조각을 배치하고 게임 다시 설정하기
+ - 게임 상태를 보고하는 오류 처리기 작성하기
+ - 구성 요소에 매개 변수 추가하기
+
+우리가 만든 프로젝트는 단순한 게임이지만 여러분이 할 수 있는 일은 훨씬 더 많습니다. 개선 방법에 대한 문제를 찾고 계신가요?
+
+### 과제
+
+다음 문제를 고려해 보세요.
+
+ - 앱에서 기본 레이아웃 및 추가 페이지를 제거하여 더 작게 만듭니다.
+ - 유효한 CSS 색 값을 전달할 수 있도록 구성 요소에 대한 매개 변수 Board 를 개선합니다.
+ - 일부 CSS 및 HTML 레이아웃을 사용하여 표시기 모양을 개선합니다.
+ - 소리 효과를 소개합니다.
+ - 시각적 표시기를 추가하고 열이 가득 찼을 때 놓기 단추가 사용되지 않도록 방지합니다.
+ - 브라우저에서 친구를 재생할 수 있도록 네트워킹 기능을 추가합니다.
+ - Blazor 애플리케이션을 사용하여 .NET MAUI에 게임을 삽입하고 휴대폰 또는 태블릿에서 플레이합니다.
+
+즐겁게 코딩하고 행복한 시간 보내세요!
+
+---
+## 연습 - 매개 변수를 사용하여 사용자 지정
+
+게임은 작동하지만 기본 색상이 마음에 들지 않을 수 있습니다. Blazor에서는 HTML 태그의 속성처럼 보이는 값들을 전달할 수 있는 컴포넌트 매개변수를 정의할 수 있습니다.
+
+이 연습에서는 매개변수를 사용하여 게임을 사용자 정의하고 보다 멋지게 만드는 데 집중합니다.
+
+### 매개변수를 사용하여 보드 커스터마이징하기
+
+보드의 색상에 대한 몇 가지 매개변수를 추가하고 `Home` 페이지에서 멋진 색상을 전달해 봅시다.
+
+Blazor에서 매개변수는 `Parameter` 속성으로 장식된 컴포넌트 내의 속성입니다.
+
+ 1. Board.razor에서 보드 색상 및 각 플레이어의 색상에 대한 세 가지 속성을 정의해 봅시다. `OnInitialized` 메서드 앞에 다음 코드를 추가합니다:
+  ```C#
+  [Parameter]
+  public Color BoardColor { get; set; } = ColorTranslator.FromHtml("yellow");
+
+  [Parameter]
+  public Color Player1Color { get; set; } = ColorTranslator.FromHtml("red");
+
+  [Parameter]
+  public Color Player2Color { get; set; } = ColorTranslator.FromHtml("blue");
+  ```
+  우리는 `Color` 형식을 사용하여 Board 컴포넌트에 전달되는 값이 실제로 색상임을 보장합니다.
+ 2. Board.razor 파일의 맨 위에 `@using` 지시문을 추가하여 `System.Drawing` 네임스페이스에서 가져온 내용을 사용한다고 지정합니다
+  ```razor
+  @using System.Drawing
+  ```
+ 3. Board.razor의 맨 위에 있는 CSS 블록의 매개변수를 사용하여 CSS 변수의 값을 설정하는 데 이 매개변수를 사용합니다.
+  ```razor
+  <HeadContent>
+      <style>
+          :root {
+              --board-bg: @ColorTranslator.ToHtml(BoardColor);
+              --player1: @ColorTranslator.ToHtml(Player1Color);
+              --player2: @ColorTranslator.ToHtml(Player2Color);
+          }
+      </style>
+  </HeadContent>
+  ```
+  이 변경 사항은 게임 보드의 외관에 아무런 영향을 미치지 않아야 합니다.
+4. 이제 Home.razor로 돌아가서 Board 태그에 일부 매개변수를 추가하고 게임이 어떻게 변경되는지 확인해 봅시다.
+  ```razor
+  <Board @rendermode="InteractiveServer"
+      BoardColor="System.Drawing.Color.Black"
+      Player1Color="System.Drawing.Color.Green"
+      Player2Color="System.Drawing.Color.Purple" />
+  ```
+  멋진 보드입니다, 그렇지 않나요?
+  ![](../img/09_Blazor를_사용하여_커넥트_4게임_빌드/4-board.png)
+
+---
+## 요약
+
+이 모듈에서는 Blazor를 사용하여 “Connect Four” 게임을 빌드했습니다. 이 과정에서 Blazor 프레임워크에 더 잘 익숙해지도록 다양한 핵심 개념에 대해 알아보았습니다.
+
+먼저 새 Blazor 앱을 만들고 주요 부분에 대해 알아보았습니다.
+
+둘째, 스타일 지정을 추가하여 앱의 모양을 사용자 지정했습니다. 또한 C# 클래스를 통해 앱에 상태를 추가했습니다.
+
+마지막으로, 사용자가 상호 작용할 수 있는 앱을 만드는 이벤트에 응답하는 방법을 배웠습니다.
 
 ---
 ## 출처
