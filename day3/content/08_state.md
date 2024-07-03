@@ -1,0 +1,96 @@
+# State management
+
+## 목차
+- [State management](#state-management)
+  - [목차](#목차)
+  - [ViewState를 통한 요청 상태 관리](#viewstate를-통한-요청-상태-관리)
+  - [세션을 통한 상태 유지](#세션을-통한-상태-유지)
+  - [애플리케이션 상태](#애플리케이션-상태)
+  - [브라우저에서](#브라우저에서)
+  - [출처](#출처)
+  - [다음](#다음)
+
+---
+
+상태 관리는 Web Forms 애플리케이션의 핵심 개념으로, ViewState, Session State, Application State 및 Postback 기능을 통해 이루어집니다. 이러한 프레임워크의 상태 유지 기능은 애플리케이션 개발자가 상태 관리를 신경쓰지 않고 기능 구현에 집중할 수 있도록 도와줍니다. ASP.NET Core와 Blazor에서는 이러한 기능 중 일부가 이전되거나 완전히 제거되었습니다. 이 장에서는 Blazor의 새로운 기능을 통해 상태를 유지하고 동일한 기능을 제공하는 방법을 살펴봅니다.
+
+## ViewState를 통한 요청 상태 관리
+
+Web Forms 애플리케이션의 상태 관리를 논할 때, 많은 개발자들이 ViewState를 떠올릴 것입니다. Web Forms에서 ViewState는 대규모 인코딩된 텍스트 블록을 브라우저로 주고받음으로써 HTTP 요청 간에 콘텐츠 상태를 관리합니다. ViewState 필드는 많은 요소를 포함한 페이지의 콘텐츠로 인해 압도당할 수 있으며, 그 크기가 몇 메가바이트에 이를 수 있습니다.
+
+Blazor Server에서는 애플리케이션이 서버와의 지속적인 연결을 유지합니다. 애플리케이션의 상태는 *서킷*이라고 불리며, 연결이 활성 상태로 간주되는 동안 서버 메모리에 보관됩니다. 사용자가 애플리케이션 또는 특정 페이지를 떠날 때만 상태가 해제됩니다. 활성화된 컴포넌트의 모든 멤버는 서버와의 상호 작용 간에 사용 가능합니다.
+
+이 기능의 몇 가지 장점은 다음과 같습니다:
+
+- 컴포넌트 상태가 즉시 사용 가능하며 상호 작용 간에 다시 구축되지 않습니다.
+- 상태가 브라우저로 전송되지 않습니다.
+
+그러나 메모리 내 컴포넌트 상태 지속성에는 몇 가지 단점도 있습니다:
+
+- 서버가 요청 사이에 다시 시작되면 상태가 손실됩니다.
+- 애플리케이션 웹 서버 로드 밸런싱 솔루션은 동일한 브라우저의 모든 요청이 동일한 서버로 돌아오도록 스티키 세션을 포함해야 합니다. 요청이 다른 서버로 이동하면 상태가 손실됩니다.
+- 서버에서 컴포넌트 상태의 지속성은 웹 서버의 메모리 압박을 초래할 수 있습니다.
+
+위의 이유로 인해 컴포넌트의 상태를 서버의 메모리 내에만 의존해서는 안 됩니다. 애플리케이션은 요청 간 데이터를 위한 백업 데이터 저장소를 포함해야 합니다. 이 전략의 간단한 예는 다음과 같습니다:
+
+- 쇼핑 카트 애플리케이션에서 새로 추가된 항목의 내용을 데이터베이스 레코드에 저장합니다. 서버의 상태가 손실되면 데이터베이스 레코드에서 복원할 수 있습니다.
+- 여러 부분으로 구성된 웹 양식에서 사용자는 각 요청 간에 값을 기억하는 애플리케이션을 기대합니다. 사용자의 각 게시물 간에 데이터를 데이터 저장소에 기록하여, 여러 부분으로 구성된 양식이 완료되면 최종 양식 응답 구조로 다시 조립할 수 있습니다.
+
+Blazor 앱에서 상태 관리를 관리하는 방법에 대한 추가 세부 사항은 ASP.NET Core Blazor 상태 관리를 참조하십시오.
+
+## 세션을 통한 상태 유지
+
+Web Forms 개발자는 `Http.ISession` 사전 객체를 사용하여 현재 활동 중인 사용자에 대한 정보를 유지할 수 있었습니다. `Session` 객체에 문자열 키로 객체를 추가하는 것은 매우 쉽고, 해당 객체는 사용자가 애플리케이션과 상호 작용하는 동안 나중에 사용할 수 있었습니다. HTTP와의 상호 작용을 관리하는 것을 제거하려는 시도에서 `Session` 객체는 상태 유지가 용이하게 되었습니다.
+
+.NET Framework의 `Session` 객체의 시그니처는 ASP.NET Core의 `Session` 객체와 동일하지 않습니다. 새 ASP.NET Core 세션 상태 기능을 사용하기로 결정하기 전에 새 ASP.NET Core 세션에 대한 문서를 고려하십시오.
+
+세션은 ASP.NET Core와 Blazor Server에서 사용할 수 있지만, 데이터를 적절한 데이터 저장소에 저장하는 것이 좋습니다. 또한 방문자가 개인 정보 보호 문제로 인해 HTTP 쿠키 사용을 거부하는 경우 세션 상태는 기능하지 않습니다.
+
+ASP.NET Core 및 세션 상태 구성에 대한 내용은 [ASP.NET Core의 세션 및 상태 관리](https://learn.microsoft.com/ko-kr/aspnet/core/fundamentals/app-state#session-state) 문서에서 확인할 수 있습니다.
+
+## 애플리케이션 상태
+
+Web Forms 프레임워크의 `Application` 객체는 애플리케이션 범위의 구성 및 상태와 상호 작용할 수 있는 대규모의 교차 요청 저장소를 제공합니다. 애플리케이션 상태는 요청을 수행하는 사용자와 상관없이 모든 요청에서 참조되는 다양한 애플리케이션 구성 속성을 저장하기에 이상적이었습니다. `Application` 객체의 문제점은 데이터가 여러 서버 간에 지속되지 않는다는 것입니다. 애플리케이션 객체의 상태는 재시작 사이에 손실됩니다.
+
+`Session`과 마찬가지로 데이터는 여러 서버 인스턴스에서 액세스할 수 있는 지속적인 백업 저장소로 이동하는 것이 좋습니다. 여러 요청 및 사용자 간에 액세스할 수 있는 휘발성 데이터가 있는 경우, 이 정보를 필요로 하거나 상호 작용해야 하는 컴포넌트에 주입할 수 있는 싱글톤 서비스를 쉽게 저장할 수 있습니다.
+
+애플리케이션 상태를 유지하기 위한 객체의 구성 및 소비는 다음과 같은 구현을 따를 수 있습니다:
+
+```csharp
+public class MyApplicationState
+{
+    public int VisitorCounter { get; private set; } = 0;
+
+    public void IncrementCounter() => VisitorCounter += 1;
+}
+```
+
+```csharp
+app.AddSingleton<MyApplicationState>();
+```
+
+```razor
+@inject MyApplicationState AppState
+
+<label>Total Visitors: @AppState.VisitorCounter</label>
+```
+
+`MyApplicationState` 객체는 서버에서 한 번만 생성되며, `VisitorCounter` 값은 컴포넌트의 라벨에서 가져와 출력됩니다. `VisitorCounter` 값은 내구성과 확장성을 위해 백업 데이터 저장소에 지속되고 검색되어야 합니다.
+
+## 브라우저에서
+
+애플리케이션 데이터는 사용자의 장치에 클라이언트 측에서 저장할 수도 있으며, 이후에 사용할 수 있습니다. 사용자의 브라우저에서 데이터의 다양한 범위를 지속할 수 있는 두 가지 브라우저 기능이 있습니다:
+
+- `localStorage` - 사용자의 전체 브라우저에 범위가 지정됩니다. 페이지가 다시 로드되거나 브라우저가 닫혀 다시 열리거나 동일한 URL로 다른 탭이 열리면 동일한 `localStorage`가 브라우저에 의해 제공됩니다.
+- `sessionStorage` - 사용자의 현재 브라우저 탭에 범위가 지정됩니다. 탭이 다시 로드되면 상태가 지속됩니다. 그러나 사용자가 애플리케이션으로 다른 탭을 열거나 브라우저를 닫았다가 다시 열면 상태가 손실됩니다.
+
+이러한 기능과 상호 작용하기 위해 일부 사용자 정의 JavaScript 코드를 작성할 수 있으며, 또는 이 기능을 제공하는 여러 NuGet 패키지를 사용할 수 있습니다. 이러한 패키지 중 하나는 [Microsoft.AspNetCore.ProtectedBrowserStorage](https://www.nuget.org/packages/Microsoft.AspNetCore.ProtectedBrowserStorage)입니다.
+
+`localStorage` 및 `sessionStorage`와 상호 작용하기 위해 이 패키지를 사용하는 방법에 대한 지침은 Blazor 상태 관리 문서를 참조하십시오.
+
+---
+## 출처
+[State management](https://learn.microsoft.com/en-us/dotnet/architecture/blazor-for-web-forms-developers/state-management)
+
+---
+## [다음](./09_form_validation.md)

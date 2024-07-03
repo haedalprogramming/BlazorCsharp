@@ -1,26 +1,21 @@
-# Frontend 3일차 : ASP.NET Core Blazor fundamentals and SignalR with Blazor
+# Frontend 3일차 : ASP.NET Core Blazor fundamentals
 
 ## 학습 목표
  - Blazor의 기초 내용 파악
- - SignalR과 Blazor 앱 만들어보기
 
 ## 목차
-   - Blazor fundamentals
-      - Overview
-      - Routing and navigation
-      - Configuration
-      - Dependency injection
-      - Startup
-      - Environments
-      - Logging
-      - Handle errors
-      - SignalR
-      - Static files
-    - Use ASP.NET Core SignalR with Blazor
-      - Prerequisites
-      - Sample app
-      - ...
+ - [An introduction to Blazor for ASP.NET Web Forms developers](./content/01_introduction.md)
+ - [Architecture comparison of ASP.NET Web Forms and Blazor](./content/02_Architecture_comparison.md)
+ - [Blazor app hosting models](./content/03_hosting_models.md)
+ - [Project structure for Blazor apps](./content/04_Project_structure.md)
+ - [App startup](./content/05_startup.md)
+ - [Build reusable UI components with Blazor](./content/06_components.md)
+ - [Pages, routing, and layouts](./content/07_page_routing_layout.md)
+ - [State management](./content/08_state.md)
+ - [Forms and validation](./content/09_form_validation.md)
+ - [Work with data](./content/10_data.md)
+ - [Modules, handlers, and middleware](./content/11_middleware.md)
+ - [App configuration](./content/12_config.md)
 
- ## 출처
-  - [Blazor fundamentals](https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/?view=aspnetcore-8.0) 및 하위 항목
-  - [Use ASP.NET Core SignalR with Blazor](https://learn.microsoft.com/en-us/aspnet/core/blazor/tutorials/signalr-blazor?view=aspnetcore-8.0&tabs=visual-studio)
+## 출처
+ - [Blazor for ASP.NET Web Forms Developers](https://learn.microsoft.com/en-us/dotnet/architecture/blazor-for-web-forms-developers/)

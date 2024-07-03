@@ -27,6 +27,20 @@
     - [Blazor EditForm 구성 요소 추가](#blazor-editform-구성-요소-추가)
     - [HTML 요소를 Blazor 구성 요소로 바꾸기](#html-요소를-blazor-구성-요소로-바꾸기)
     - [양식을 제출하기 전에 빈 필드 확인](#양식을-제출하기-전에-빈-필드-확인)
+  - [유효성 검사 코드를 작성하지 않고 암시적으로 사용자 입력 유효성 검사](#유효성-검사-코드를-작성하지-않고-암시적으로-사용자-입력-유효성-검사)
+    - [Blazor 양식에서 사용자 입력 유효성 검사](#blazor-양식에서-사용자-입력-유효성-검사)
+    - [유효성 검사를 위해 모델 준비](#유효성-검사를-위해-모델-준비)
+    - [양식에 유효성 검사 구성 요소 추가](#양식에-유효성-검사-구성-요소-추가)
+    - [앱의 양식 유효성 검사 제어](#앱의-양식-유효성-검사-제어)
+    - [양식 제출 시 서버 쪽에서 양식 유효성 검사 처리](#양식-제출-시-서버-쪽에서-양식-유효성-검사-처리)
+  - [연습 - 주소 양식에 서버 측 및 클라이언트 측 데이터 유효성 검사 추가](#연습---주소-양식에-서버-측-및-클라이언트-측-데이터-유효성-검사-추가)
+    - [Blazor 모델에 데이터 주석 추가](#blazor-모델에-데이터-주석-추가)
+    - [새 데이터 주석 유효성 검사 테스트](#새-데이터-주석-유효성-검사-테스트)
+    - [EditFrom 오류 메시지 개선](#editfrom-오류-메시지-개선)
+    - [새 데이터 주석 유효성 검사 테스트](#새-데이터-주석-유효성-검사-테스트-1)
+    - [전체 오류 메시지를 복원하고 제출 단추를 비활성화](#전체-오류-메시지를-복원하고-제출-단추를-비활성화)
+    - [모든 필드가 올바르면 제출 단추를 활성화](#모든-필드가-올바르면-제출-단추를-활성화)
+  - [요약](#요약)
   - [출처](#출처)
   - [다음](#다음)
 
@@ -953,13 +967,515 @@ EditForm은 EditContext 개체를 사용하여 변경된 필드 및 해당 현�
 6. Shift + F5 키를 눌러 앱 실행을 중지합니다.
 
 ---
+## 유효성 검사 코드를 작성하지 않고 암시적으로 사용자 입력 유효성 검사
 
+웹 사이트 사용자에게 양식에서 각 값을 올바르게 완성하는 방법에 대한 지침을 제공해야 하지만 사용자가 입력하는 값도 확인해야 합니다. Blazor는 최소한의 사용자 지정 코드로 이 유효성 검사를 수행할 수 있는 간단한 도구를 제공합니다.
 
+이 단원에서는 Blazor가 데이터를 예상할 수 있도록 모델에 주석을 다는 방법과 사용자 데이터의 유효성을 검사하고 사용자 데이터에 올바르게 응답하도록 양식을 구성하는 방법을 알아봅니다.
 
+### Blazor 양식에서 사용자 입력 유효성 검사
+
+웹 사이트 사용자로부터 정보를 수집하는 경우 정보가 유효한 의미이고 적합한 형식인지 확인하는 것이 중요합니다.
+
+ - 비즈니스상 이유: 사용자에게 양질의 서비스를 제공하려면 전화 번호 또는 주문 세부 정보와 같은 고객 정보가 정확해야 합니다. 예를 들어 사용자가 전화 번호를 입력하는 즉시 웹 페이지에서 잘못된 전화 번호를 발견할 수 있는 경우 나중에 비용이 많이 드는 지연을 방지할 수 있습니다.
+ - 기술적 이유: 코드가 계산 또는 기타 처리에 양식 입력을 사용하는 경우 잘못된 입력으로 인해 오류 및 예외가 발생할 수 있습니다.
+ - 보안상 이유: 악의적인 사용자가 확인되지 않은 입력 필드를 악용하여 코드를 삽입하려고 할 수 있습니다.
+
+웹 사이트 사용자는 입력한 세부 정보의 존재 및 올바른 형식을 확인하는 유효성 검사 규칙에 익숙합니다. 필수 필드는 별표 또는 필수 레이블로 표시되는 경우가 많습니다. 값을 생략하거나 형식이 잘못된 값을 입력하면 문제를 올바르게 해결하는 방법을 알려주는 유효성 검사 메시지가 표시됩니다. 사용자가 필드에서 탭하거나 제출 단추를 클릭할 때 유효성 검사 메시지가 나타날 수 있습니다.
+
+다음은 사용자가 잘못된 데이터를 제출한 예제 양식입니다. 이 경우 양식의 맨 아래에 유효성 검사 메시지가 있으며 잘못된 필드가 빨간색으로 강조 표시됩니다. 다음 연습에서 이 양식을 빌드합니다.
+
+![](../img/06_Blazor_웹앱에서_폼_및_유효성_검사의_작동_방식_개선/7-show-validation-errors.png)
+
+유효성 검사 메시지를 최대한 도움이 되게 만드는 것이 좋습니다. 사용자가 보유한 정보 수준에 대해 어떠한 가정도 하지 마세요. 예를 들어 모든 사용자가 유효한 이메일 주소의 형식을 알고 있는 것은 아닙니다.
+
+Blazor에서 `EditForm` 구성 요소를 사용하는 경우 복잡한 코드를 작성하지 않고도 다양한 유효성 검사 옵션을 사용할 수 있습니다.
+
+ - 모델에서 각 속성에 대한 데이터 주석을 사용하여 값이 필요한 시점과 값이 가져야 하는 형식을 Blazor에 알릴 수 있습니다.
+ - `EditForm` 구성 요소 내에 DataAnnotationsValidator구성 요소를 추가합니다. 이 구성 요소는 사용자가 입력한 값에 대해 모델 주석을 검사합니다.
+ - 제출된 양식에서 모든 유효성 검사 메시지의 요약을 표시하려는 경우 ValidationSummary 구성 요소를 사용합니다.
+ - 특정 모델 속성에 대한 유효성 검사 메시지를 표시하려면 ValidationMessage 구성 요소를 사용합니다.
+
+### 유효성 검사를 위해 모델 준비
+
+DataAnnotationsValidator 구성 요소에 유효한 데이터의 모양을 알려주는 것부터 시작합니다. 데이터 모델에서 주석 특성을 사용하여 유효성 검사 제한 사항을 선언합니다. 다음 예제를 고려해 보세요.
+
+```C#
+using  System.ComponentModel.DataAnnotations;
+
+public class Pizza
+{
+    public int Id { get; set; }
+    
+    [Required]
+    public string Name { get; set; }
+    
+    public string Description { get; set; }
+    
+    [EmailAddress]
+    public string ChefEmail { get; set;}
+    
+    [Required]
+    [Range(10.00, 25.00)]
+    public decimal Price { get; set; }
+}
+```
+
+이 모델을 Blazing Pizza 직원이 메뉴에 새 피자를 추가할 수 있는 양식으로 사용합니다. 여기에는 `Name` 및 `Price` 값이 항상 완성되도록 하는 `[Required]` 특성이 포함됩니다. 또한 `[Range]` 특성을 사용하여 입력한 가격이 피자에 합리적인 범위 내에 있는지 확인합니다. 마지막으로 `[EmailAddress]` 특성을 사용하여 입력한 ChefEmail 값이 유효한 이메일 주소인지 확인합니다.
+
+모델에서 사용할 수 있는 다른 주석은 다음과 같습니다.
+
+ - `[ValidationNever]`: 필드가 유효성 검사에 포함되지 않도록 하려면 이 주석을 사용합니다.
+ - `[CreditCard]`: 사용자의 유효한 신용 카드 번호를 기록하려면 이 주석을 사용합니다.
+ - `[Compare]`: 모델의 두 속성이 일치하는지 확인하려면 이 주석을 사용합니다.
+ - `[Phone]`: 사용자의 유효한 전화 번호를 기록하려면 이 주석을 사용합니다.
+ - `[RegularExpression]`: 정규식과 비교하여 값의 형식을 확인하려면 이 주석을 사용합니다.
+ - `[StringLength]`: 문자열 값의 길이가 최대 길이를 초과하지 않는지 확인하려면 이 주석을 사용합니다.
+ - `[Url]`: 사용자의 유효한 URL을 기록하려면 이 주석을 사용합니다.
+
+```
+참고
+
+정규식은 문자열을 패턴과 비교하고 문자열을 수정하는 데 널리 사용됩니다. 또한 양식 값이 준수해야 하는 사용자 지정 형식을 정의하는 데 사용할 수 있습니다. .NET의 정규식에 대한 자세한 내용은 .NET 정규식을 참조하세요.
+```
+
+### 양식에 유효성 검사 구성 요소 추가
+
+데이터 주석 유효성 검사를 사용하도록 양식을 구성하려면 먼저 입력 컨트롤을 모델 속성에 바인딩했는지 확인합니다. 그런 다음, `EditForm` 구성 요소 내의 어딘가에 DataAnnotationsValidator 구성 요소를 추가합니다. 유효성 검사에서 생성되는 메시지를 표시하려면 양식의 모든 컨트롤에 대한 모든 유효성 검사 메시지를 표시하는 ValidationSummary 구성 요소를 사용합니다. 각 컨트롤 옆에 유효성 검사 메시지를 표시하려면 여러 ValidationMessage 구성 요소를 사용합니다. `For` 특성을 사용하여 각 ValidationMessage 컨트롤을 모델의 특정 속성에 연결해야 합니다.
+
+```C#
+@page "/admin/createpizza"
+
+<h1>Add a new pizza</h1>
+
+<EditForm Model="@pizza">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    
+    <InputText id="name" @bind-Value="pizza.Name" />
+    <ValidationMessage For="@(() => pizza.Name)" />
+    
+    <InputText id="description" @bind-Value="pizza.Description" />
+    
+    <InputText id="chefemail" @bind-Value="pizza.ChefEmail" />
+    <ValidationMessage For="@(() => pizza.ChefEmail)" />
+    
+    <InputNumber id="price" @bind-Value="pizza.Price" />
+    <ValidationMessage For="@(() => pizza.Price)" />
+</EditForm>
+
+@code {
+    private Pizza pizza = new();
+}
+```
+
+### 앱의 양식 유효성 검사 제어
+
+Blazor는 유효성 검사를 두 번 수행합니다.
+
+ - 필드 유효성 검사는 사용자가 다른 필드를 탭할 때 실행됩니다. 필드 유효성 검사는 사용자가 가능한 한 빨리 유효성 검사 문제를 인식하도록 합니다.
+ - 모델 유효성 검사는 사용자가 양식을 제출할 때 실행됩니다. 모델 유효성 검사는 잘못된 데이터가 저장되지 않도록 합니다.
+
+양식이 유효성 검사에 실패하면 ValidationSummary 및 ValidationMessage 구성 요소에 메시지가 표시됩니다. 이러한 메시지를 사용자 지정하려면 모델의 각 필드에 대한 데이터 주석에 `ErrorMessage` 특성을 추가할 수 있습니다.
+
+```C#
+public class Pizza
+{
+    public int Id { get; set; }
+    
+    [Required(ErrorMessage = "You must set a name for your pizza.")]
+    public string Name { get; set; }
+    
+    public string Description { get; set; }
+    
+    [EmailAddress(ErrorMessage = "You must set a valid email address for the chef responsible for the pizza recipe.")]
+    public string ChefEmail { get; set;}
+    
+    [Required]
+    [Range(10.00, 25.00, ErrorMessage = "You must set a price between $10 and $25.")]
+    public decimal Price { get; set; }
+}
+```
+
+기본으로 제공되는 유효성 검사 특성은 다양하며 정규식을 사용하여 다양한 종류의 문자 패턴을 확인할 수 있습니다. 그러나 유효성 검사에 대한 구체적이거나 비정상적인 요구 사항이 있는 경우 기본으로 제공되는 특성으로 정확하게 충족하지 못할 수 있습니다. 이러한 경우 사용자 지정 유효성 검사 특성을 만들 수 있습니다. 먼저, ValidationAttribute 클래스에서 상속하는 클래스를 만들고 IsValid 메서드를 재정의합니다.
+
+```C#
+public class PizzaBase : ValidationAttribute
+{
+    public string GetErrorMessage() => $"Sorry, that's not a valid pizza base.";
+
+    protected override ValidationResult IsValid(
+        object value, ValidationContext validationContext)
+    {
+        if (value != "Tomato" || value != "Pesto")
+        {
+            return new ValidationResult(GetErrorMessage());
+        }
+
+        return ValidationResult.Success;
+    }
+}
+```
+
+이제 모델 클래스에서 기본 제공 특성을 사용할 때 사용자 지정 유효성 검사 특성을 사용할 수 있습니다.
+
+```C#
+public class Pizza
+{
+    public int Id { get; set; }
+    
+    [Required(ErrorMessage = "You must set a name for your pizza.")]
+    public string Name { get; set; }
+    
+    public string Description { get; set; }
+    
+    [EmailAddress(
+        ErrorMessage = "You must set a valid email address for the chef responsible for the pizza recipe.")]
+    public string ChefEmail { get; set;}
+    
+    [Required]
+    [Range(10.00, 25.00, ErrorMessage = "You must set a price between $10 and $25.")]
+    public decimal Price { get; set; }
+    
+    [PizzaBase]
+    public string Base { get; set; }
+}
+```
+
+### 양식 제출 시 서버 쪽에서 양식 유효성 검사 처리
+
+`EditForm` 구성 요소를 사용하는 경우 양식 제출에 응답하는 데 다음 세 가지 이벤트를 사용할 수 있습니다.
+
+ - `OnSubmit`: 이 이벤트는 유효성 검사 결과에 관계없이 사용자가 양식을 제출할 때마다 발생합니다.
+ - `OnValidSubmit`: 이 이벤트는 사용자가 양식을 제출하고 입력이 유효성 검사를 통과하면 발생합니다.
+ - `OnInvalidSubmit`: 이 이벤트는 사용자가 양식을 제출하고 입력이 유효성 검사에 실패할 때 발생합니다.
+
+`OnSubmit`을 사용하는 경우 다른 두 이벤트는 발생하지 않습니다. 대신 `EditContext` 매개 변수를 사용하여 입력 데이터를 처리할지 여부를 확인할 수 있습니다. 양식 제출을 처리하는 고유한 논리를 작성하려면 이 이벤트를 사용합니다.
+
+```razor
+@page "/admin/createpizza"
+
+<h1>Add a new pizza</a>
+
+<EditForm Model="@pizza" OnSubmit=@HandleSubmission>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    
+    <InputText id="name" @bind-Value="pizza.Name" />
+    <ValidationMessage For="@(() => pizza.Name)" />
+    
+    <InputText id="description" @bind-Value="pizza.Description" />
+    
+    <InputText id="chefemail" @bind-Value="pizza.ChefEmail" />
+    <ValidationMessage For="@(() => pizza.ChefEMail)" />
+    
+    <InputNumber id="price" @bind-Value="pizza.Price" />
+    <ValidationMessage For="@(() => pizza.Price" />
+</EditForm>
+
+@code {
+    private Pizza pizza = new();
+    
+    void HandleSubmission(EditContext context)
+    {
+        bool dataIsValid = context.Validate();
+        if (dataIsValid)
+        {
+            // Store valid data here
+        }
+    }
+}
+```
+
+`OnValidSubmit` 및 `OnInvalidSubmit`를 대신 사용하는 경우 각 이벤트 처리기 내에서 유효성 검사 상태를 확인할 필요가 없습니다.
+
+```razor
+@page "/admin/createpizza"
+
+<h1>Add a new pizza</a>
+
+<EditForm Model="@pizza" OnValidSubmit=@ProcessInputData OnInvalidSubmit=@ShowFeedback>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    
+    <InputText id="name" @bind-Value="pizza.Name" />
+    <ValidationMessage For="@(() => pizza.Name)" />
+    
+    <InputText id="description" @bind-Value="pizza.Description" />
+    
+    <InputText id="chefemail" @bind-Value="pizza.ChefEmail" />
+    <ValidationMessage For="@(() => pizza.ChefEMail)" />
+    
+    <InputNumber id="price" @bind-Value="pizza.Price" />
+    <ValidationMessage For="@(() => pizza.Price" />
+</EditForm>
+
+@code {
+    private Pizza pizza = new();
+    
+    void ProcessInputData(EditContext context)
+    {
+        // Store valid data here
+    }
+    
+    void ShowFeedback(EditContext context)
+    {
+        // Take action here to help the user correct the issues
+    }
+}
+```
+---
+## 연습 - 주소 양식에 서버 측 및 클라이언트 측 데이터 유효성 검사 추가
+
+Blazor는 애플리케이션에서 모델에 양식을 바인딩할 수 있습니다. 이러한 모델을 데이터 주석으로 데코레이트하는 경우 코드를 더 작성하지 않고도 클라이언트 및 서버 측 유효성 검사를 가져올 수 있습니다.
+
+클라이언트가 이름 및 일부 주소 필드를 입력하지 않으면 앱이 올바르게 주문을 제출하지 않습니다. 팀에서는 유효성 검사를 개선하여 더 많은 필드를 포함하려고 합니다. 또한 최소 길이 및 문자 유효성 검사를 사용하려고 합니다.
+
+이 연습에서는 데이터 주석을 사용하도록 현재 서버 쪽 유효성 검사를 대체합니다. 유효성 검사 메시지를 관리하고 기본 제공 유효성 검사 지원을 개선하는 방법을 알아봅니다. 마지막 단계에서는 모든 필드가 유효한 경우에만 양식을 제출하도록 양식이 제출되는 방식을 제어합니다.
+
+### Blazor 모델에 데이터 주석 추가
+
+ 1. Visual Studio Code의 파일 탐색기에서 모델을 확장한 다음 Address.cs를 선택합니다.
+ 2. 클래스 맨 위에서 System.ComponentModel.DataAnnotations에 대한 참조를 추가합니다.
+    ```C#
+    using System.ComponentModel.DataAnnotations;
+    ```
+ 3. 필요한 각 필드에 데이터 주석을 추가합니다.
+    ```C#
+    public class Address
+    {
+        public int Id { get; set; }
+
+        [Required, MinLength(3), MaxLength(100)]
+        public string Name { get; set; }
+
+        [Required, MinLength(5), MaxLength(100)]
+        public string Line1 { get; set; }
+
+        [MaxLength(100)]
+        public string Line2 { get; set; }
+
+        [Required, MinLength(3), MaxLength(50)]
+        public string City { get; set; }
+
+        [Required, MinLength(3), MaxLength(20)]
+        public string Region { get; set; }
+
+        [Required, RegularExpression(@"^([0-9]{5})$")]
+        public string PostalCode { get; set; }
+    }
+    ```
+ 4. 파일 탐색기에서 페이지를 확장한 다음 Checkout.razor를 선택합니다.
+ 5. 닫는 `</EditForm>` 태그 위에 유효성 검사 요약과 데이터 주석 유효성 검사기를 추가합니다.
+    ```razor
+        <ValidationSummary />
+        <DataAnnotationsValidator />
+    </EditForm>
+    </div>
+    ```
+ 6. EditForm 태그에서 `OnSubmit` 매개 변수를 바꾸어 유효한 제출을 사용합니다.
+    ```razor
+    <EditForm Model=Order.DeliveryAddress OnValidSubmit=PlaceOrder>
+    ```
+ 7. 이제 사용자 지정 서버 쪽 논리를 삭제하여 주소가 유효한지 테스트할 수 있습니다. `@code` 블록에서 `CheckSubmission` 메서드를 삭제합니다.
+
+### 새 데이터 주석 유효성 검사 테스트
+
+ 1. Visual Studio Code에서 F5 키를 누르거나 실행>디버깅 시작을 선택합니다.<br>아무 정보도 입력하지 않고 피자를 주문해본 다음, 정보를 일부만 입력하고 주문해봅니다. 각 필드에 대한 세부 오류 메시지를 관찰합니다.<br>![](../img/06_Blazor_웹앱에서_폼_및_유효성_검사의_작동_방식_개선/7-show-validation-errors.png)<br>이 상호 작용은 각 필드에 대한 오류 검사를 개선하지만 각 필드에 대한 오류는 관련된 필드 옆에 있는 편이 훨씬 적합합니다.
+ 2. Shift + F5 키를 눌러 앱 실행을 중지합니다.
+
+### EditFrom 오류 메시지 개선
+ 1. 파일 탐색기에서 페이지를 확장한 다음 Checkout.razor를 선택합니다.
+ 2. Blazor `<ValidationSummary />` 구성 요소를 삭제합니다.
+    ```razor
+            <DataAnnotationsValidator />
+    </EditForm>
+    </div>
+    ```
+ 3. 파일 탐색기에서 공유를 확장한 다음 AddressEditor.razor를 선택합니다.
+ 4. 각 필드 아래에 사용자 지정 유효성 검사 메시지를 추가합니다.
+    ```razor
+    <div class="form-field">
+        <label>Name:</label>
+        <div>
+            <InputText @bind-Value="Address.Name" />
+            <ValidationMessage For="@(() => Address.Name)" />
+        </div>
+    </div>
+
+    <div class="form-field">
+        <label>Line 1:</label>
+        <div>
+            <InputText @bind-Value="Address.Line1" />
+            <ValidationMessage For="@(() => Address.Line1)" />
+        </div>
+    </div>
+
+    <div class="form-field">
+        <label>Line 2:</label>
+        <div>
+            <InputText @bind-Value="Address.Line2" />
+            <ValidationMessage For="@(() => Address.Line2)" />
+        </div>
+    </div>
+
+    <div class="form-field">
+        <label>City:</label>
+        <div>
+            <InputText @bind-Value="Address.City" />
+            <ValidationMessage For="@(() => Address.City)" />
+        </div>
+    </div>
+
+    <div class="form-field">
+        <label>Region:</label>
+        <div>
+            <InputText @bind-Value="Address.Region" />
+            <ValidationMessage For="@(() => Address.Region)" />
+        </div>
+    </div>
+
+    <div class="form-field">
+        <label>Postal code:</label>
+        <div>
+            <InputText @bind-Value="Address.PostalCode" />
+            <ValidationMessage For="@(() => Address.PostalCode)" />
+        </div>
+    </div>
+    ```
+ 5. 파일 탐색기에서 모델을 확장한 다음 Address.cs를 선택합니다.
+ 6. 각 필드의 데이터 주석에 대한 사용자 지정 오류 메시지를 추가합니다.
+    ```C#
+    public class Address
+    {
+        public int Id { get; set; }
+
+        [Required, MinLength(3, ErrorMessage = "Please use a Name bigger than 3 letters."), MaxLength(100, ErrorMessage = "Please use a Name less than 100 letters.")]
+        public string Name { get; set; }
+
+        [Required, MinLength(5, ErrorMessage = "Please use an Address bigger than 5 letters."), MaxLength(100, ErrorMessage = "Please use an Address less than 100 letters.")]
+        public string Line1 { get; set; }
+
+        [MaxLength(100)]
+        public string Line2 { get; set; }
+
+        [Required, MinLength(3, ErrorMessage = "Please use a City bigger than 3 letters."), MaxLength(50, ErrorMessage = "Please use a City less than 50 letters.")]
+        public string City { get; set; }
+
+        [Required, MinLength(3, ErrorMessage = "Please use a Region bigger than 3 letters."), MaxLength(20, ErrorMessage = "Please use a Region less than 20 letters.")]
+        public string Region { get; set; }
+
+        [Required, RegularExpression(@"^([0-9]{5})$", ErrorMessage = "Please use a valid Postal Code with five numbers.")]
+        public string PostalCode { get; set; }
+    }
+    ```
+
+### 새 데이터 주석 유효성 검사 테스트
+ 1. Visual Studio Code에서 F5 키를 누르거나 실행>디버깅 시작을 선택합니다.<br>![](../img/06_Blazor_웹앱에서_폼_및_유효성_검사의_작동_방식_개선/7-active-validation-error-messages.gif)<br>주소 양식은 잘못된 데이터가 입력된 필드 아래에 오류 메시지를 동적으로 표시합니다. 이 상호 작용은 클라이언트 쪽에서 발생하며 고객이 잘못된 주소를 입력하는 것을 방지합니다.
+ 2. Shift + F5 키를 눌러 앱 실행을 중지합니다.
+
+### 전체 오류 메시지를 복원하고 제출 단추를 비활성화
+
+ 1. 파일 탐색기에서 페이지를 확장한 다음 Checkout.razor를 선택합니다.
+ 2. `EditForm` 구성 요소에 `ShowError` 메서드를 호출할 `OnInvalidSubmit` 매개 변수를 추가합니다.
+    ```razor
+    <EditForm Model=Order.DeliveryAddress OnValidSubmit=PlaceOrder OnInvalidSubmit=ShowError> 
+    ```
+ 3. `isError` 속성을 업데이트하는 ShowError 메서드를 추가합니다.
+    ```C#
+    protected void ShowError()
+    {
+        isError = true;
+    }     
+    ```
+ 4. PlaceOrder 메서드를 변경하여 isError 및 isSubmitting 속성을 업데이트합니다.
+    ```C#
+    async Task PlaceOrder()
+    {
+        isError = false;
+        isSubmitting = true;
+        var response = await HttpClient.PostAsJsonAsync(
+            $"{NavigationManager.BaseUri}orders", OrderState.Order);
+        var newOrderId= await response.Content.ReadFromJsonAsync<int>();
+        OrderState.ResetOrder();
+        NavigationManager.NavigateTo($"myorders/{newOrderId}");
+    } 
+    ```
+ 5. Visual Studio Code에서 F5 키를 누르거나 실행>디버깅 시작을 선택합니다.<br>![](../img/06_Blazor_웹앱에서_폼_및_유효성_검사의_작동_방식_개선/7-restored-generic-error-message.png)<br>고객이 잘못된 양식을 제출하려고 하면 오류 메시지가 표시됩니다.
+ 6.Shift + F5 키를 눌러 앱 실행을 중지합니다.
+
+### 모든 필드가 올바르면 제출 단추를 활성화
+
+고객이 모든 필드를 완성할 때까지 주문을 제출할 수 없는 사용자 환경이 더 나을까요? 이 요구 사항을 지원하도록 체크 아웃 페이지를 변경해 보겠습니다. 모델 대신 `EditContext`를 사용하도록 `EditForm`을 변경합니다.
+
+ 1. 파일 탐색기에서 페이지를 확장한 다음 Checkout.razor를 선택합니다.
+ 2. `EditFrom` 요소를 업데이트합니다.
+    ```razor
+    <EditForm EditContext=editContext OnValidSubmit=PlaceOrder> 
+    ```
+ 3. `isError` 매개 변수를 사용하도록 단추 요소를 변경합니다.
+    ```razor
+    <button class="checkout-button btn btn-warning" type="Submit" disabled=@isError>
+    ```
+ 4. `@code` 블록에서 새 `EditContext`에 대한 선언을 추가합니다.
+    ```C#
+    private EditContext editContext;
+    ```
+ 5. 주문 배달 주소를 사용하여 컨텍스트를 초기화합니다.
+    ```C#
+    protected override void OnInitialized()
+    {
+        editContext = new(Order.DeliveryAddress);
+        editContext.OnFieldChanged += HandleFieldChanged;
+    }    
+    ```
+    또한 이 코드를 사용하면 이벤트 처리기를 필드가 변경되는 시점에 연결할 수 있습니다. 새 처리기에서 모델이 유효한지 확인하고 isError를 적절하게 설정할 수 있습니다.
+    ```C#
+        private void HandleFieldChanged(object sender, FieldChangedEventArgs e)
+        {
+            isError = !editContext.Validate();
+            StateHasChanged();
+        }
+    ```
+ 6. 이제 이벤트 처리기를 만들었으므로 체크 아웃 구성 요소에 더 이상 필요하지 않으면 이를 삭제해야 합니다.
+    ```C#
+    public void Dispose()
+    {
+        editContext.OnFieldChanged -= HandleFieldChanged;
+    }
+    ```
+7. `Dispose` 기능을 구현하려면 Blazor에도 알려야 합니다. 다음 코드를 페이지 맨 위의 `@inject` 문 아래에 추가합니다.
+    ```razor
+    @implements IDisposable
+    ```
+ 8. `isSubmitting`에 대한 참조를 모두 삭제하고 `PlaceOrder` 메서드를 업데이트합니다.
+
+    ```C#
+    async Task PlaceOrder()
+    {
+    var response = await HttpClient.PostAsJsonAsync(NavigationManager.BaseUri + "orders", OrderState.Order);
+    var newOrderId= await response.Content.ReadFromJsonAsync<int>();
+    OrderState.ResetOrder();
+    NavigationManager.NavigateTo($"myorders/{newOrderId}");
+    }    
+    ```
+ 9. Visual Studio Code에서 F5 키를 누르거나 실행>디버깅 시작을 선택합니다.<br>![](../img/06_Blazor_웹앱에서_폼_및_유효성_검사의_작동_방식_개선/7-disabled-button.gif)<br>이제 고객에게 정보를 입력하라는 메시지가 표시되고, 먼저 주문하기 단추가 비활성화됩니다. 모든 필수 필드에 데이터가 입력된 후에만 단추를 클릭할 수 있습니다.
+ 10. Shift + F5 키를 눌러 앱 실행을 중지합니다.
+
+---
+## 요약
+
+Blazor는 앱 사용자와의 상호 작용을 개선하기 위한 많은 기능을 제공합니다. DOM 이벤트를 캡처 및 처리하고, HTML 양식을 사용하고, 사용자가 제공한 입력에 대한 광범위한 유효성 검사를 제공할 수 있습니다.
+
+이 모듈에서 학습한 내용은 다음과 같습니다.
+
+ - Blazor 이벤트 처리기를 사용하여 앱의 대화형 작업을 개선합니다.
+ - Blazor 양식을 사용하여 데이터 입력을 개선합니다.
+ - 서버 및 클라이언트 쪽 유효성 검사를 사용하여 Blazor 양식을 확장합니다.
 
 ---
 ## 출처
-[Microsoft learn Blazor 웹앱에서 폼 및 유효성 검사의 작동 방식 개선](https://learn.microsoft.com/ko-kr/training/modules/use-pages-routing-layouts-control-blazor-navigation/)
+ - [Microsoft learn Blazor 웹앱에서 폼 및 유효성 검사의 작동 방식 개선](https://learn.microsoft.com/ko-kr/training/modules/use-pages-routing-layouts-control-blazor-navigation/)
 
 ---
-## [다음](./06_Blazor_웹앱에서_폼_및_유효성_검사의_작동_방식_개선.md)
+## [다음](./07_Blazor_웹앱에_대한_풍부한_대화형_구성_요소_빌드.md)
