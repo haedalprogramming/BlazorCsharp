@@ -3032,7 +3032,7 @@ NOTE − bottom이나 right 값을 top과 left와 동일하게 사용할 수 있
 :lang  
 지정된 요소에 사용할 언어를 지정합니다.
 
-<style>...</style> 블록에서 가상 클래스를 정의할 때 다음 사항을 유의해야 합니다 −
+`<style>...</style>` 블록에서 가상 클래스를 정의할 때 다음 사항을 유의해야 합니다 −
 
 - a:hover는 CSS 정의에서 a:link 및 a:visited 뒤에 와야 효과적입니다.
 - a:active는 CSS 정의에서 a:hover 뒤에 와야 효과적입니다.
@@ -3129,7 +3129,7 @@ NOTE − bottom이나 right 값을 top과 left와 동일하게 사용할 수 있
 
 IE에서 :first-child가 작동하려면 문서의 맨 위에 <!DOCTYPE>을 선언해야 합니다.
 
-예를 들어, 모든 <div> 요소의 첫 번째 단락을 들여쓰기 하려면 다음 정의를 사용할 수 있습니다 −
+예를 들어, 모든 `<div>` 요소의 첫 번째 단락을 들여쓰기 하려면 다음 정의를 사용할 수 있습니다 −
 
 ```html
 <html>
