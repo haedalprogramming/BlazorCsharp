@@ -8,7 +8,7 @@
 
 ---
 
-ASP.NET Core 앱은 *미들웨어*로 구성됩니다. 미들웨어는 요청 및 응답을 처리하기 위해 파이프라인으로 배열된 핸들러입니다. Web Forms 앱에서는 HTTP 핸들러 및 모듈이 유사한 문제를 해결합니다. ASP.NET Core에서는 모듈, 핸들러, *Global.asax.cs*, 그리고 앱 수명 주기가 미들웨어로 대체됩니다. 이 장에서는 Blazor 앱의 맥락에서 미들웨어에 대해 배우게 됩니다.
+ASP.NET Core 앱은 *미들웨어*로 구성됩니다. 미들웨어는 요청 및 응답을 처리하기 위해 파이프라인으로 배열된 핸들러입니다. ASP.NET Core에서는 모듈, 핸들러, *Global.asax.cs*, 그리고 앱 수명 주기가 미들웨어로 대체됩니다. 이 장에서는 Blazor 앱의 맥락에서 미들웨어에 대해 배우게 됩니다.
 
 ## 개요
 
@@ -16,7 +16,7 @@ ASP.NET Core 요청 파이프라인은 일련의 요청 대리자로 구성되�
 
 ![pipeline](../img/11_middleware/request-delegate-pipeline.png)
 
-위의 다이어그램에는 수명 주기 이벤트의 개념이 없습니다. 이 개념은 ASP.NET Web Forms 요청이 처리되는 방식의 기초가 됩니다. 이 시스템은 어떤 프로세스가 발생하는지 이해하기 쉽게 하며, 미들웨어를 어떤 지점에든 삽입할 수 있게 해줍니다. 미들웨어는 요청 파이프라인에 추가된 순서대로 실행됩니다. 이는 주로 *Startup.cs* 파일의 코드에서 추가됩니다.
+위의 다이어그램에는 수명 주기 이벤트의 개념이 없습니다. 이 시스템은 어떤 프로세스가 발생하는지 이해하기 쉽게 하며, 미들웨어를 어떤 지점에든 삽입할 수 있게 해줍니다. 미들웨어는 요청 파이프라인에 추가된 순서대로 실행됩니다. 이는 주로 *Startup.cs* 파일의 코드에서 추가됩니다.
 
 ## Katana
 
@@ -30,22 +30,22 @@ ASP.NET 4.x는 많은 모듈을 포함하고 있습니다. 유사하게, ASP.NET
 
 |모듈                    |ASP.NET 4.x 모듈                |ASP.NET Core 옵션|
 |------------------------|------------------------------|-----------------|
-|HTTP 오류               |`CustomErrorModule`           |[상태 코드 페이지 미들웨어]|
-|기본 문서               |`DefaultDocumentModule`       |[기본 파일 미들웨어]|
-|디렉터리 브라우징       |`DirectoryListingModule`      |[디렉터리 브라우징 미들웨어]|
-|동적 압축               |`DynamicCompressionModule`    |[응답 압축 미들웨어]|
-|실패한 요청 추적       |`FailedRequestsTracingModule` |[ASP.NET Core 로깅]|
-|파일 캐싱               |`FileCacheModule`             |[응답 캐싱 미들웨어]|
-|HTTP 캐싱               |`HttpCacheModule`             |[응답 캐싱 미들웨어]|
-|HTTP 로깅               |`HttpLoggingModule`           |[ASP.NET Core 로깅]|
-|HTTP 리디렉션           |`HttpRedirectionModule`       |[URL 재작성 미들웨어]|
-|ISAPI 필터              |`IsapiFilterModule`           |[미들웨어]|
-|ISAPI                   |`IsapiModule`                 |[미들웨어]|
-|요청 필터링             |`RequestFilteringModule`      |[URL 재작성 미들웨어 IRule]|
-|URL 재작성&#8224;       |`RewriteModule`               |[URL 재작성 미들웨어]|
-|정적 압축               |`StaticCompressionModule`     |[응답 압축 미들웨어]|
-|정적 콘텐츠             |`StaticFileModule`            |[정적 파일 미들웨어]|
-|URL 인증                |`UrlAuthorizationModule`      |[ASP.NET Core Identity]|
+|HTTP 오류               |`CustomErrorModule`           |상태 코드 페이지 미들웨어|
+|기본 문서               |`DefaultDocumentModule`       |기본 파일 미들웨어|
+|디렉터리 브라우징       |`DirectoryListingModule`      |디렉터리 브라우징 미들웨어|
+|동적 압축               |`DynamicCompressionModule`    |응답 압축 미들웨어|
+|실패한 요청 추적       |`FailedRequestsTracingModule` |ASP.NET Core 로깅|
+|파일 캐싱               |`FileCacheModule`             |응답 캐싱 미들웨어|
+|HTTP 캐싱               |`HttpCacheModule`             |응답 캐싱 미들웨어|
+|HTTP 로깅               |`HttpLoggingModule`           |ASP.NET Core 로깅|
+|HTTP 리디렉션           |`HttpRedirectionModule`       |URL 재작성 미들웨어|
+|ISAPI 필터              |`IsapiFilterModule`           |미들웨어|
+|ISAPI                   |`IsapiModule`                 |미들웨어|
+|요청 필터링             |`RequestFilteringModule`      |URL 재작성 미들웨어 IRule|
+|URL 재작성&#8224;       |`RewriteModule`               |URL 재작성 미들웨어|
+|정적 압축               |`StaticCompressionModule`     |응답 압축 미들웨어|
+|정적 콘텐츠             |`StaticFileModule`            |정적 파일 미들웨어|
+|URL 인증                |`UrlAuthorizationModule`      |ASP.NET Core Identity|
 
 이 목록은 포괄적이지 않지만 두 프레임워크 간의 매핑이 어떻게 이루어지는지에 대한 아이디어를 제공합니다. 더 자세한 목록은 [ASP.NET Core와 함께 사용하는 IIS 모듈]을 참조하십시오.
 
@@ -81,7 +81,7 @@ public class Startup
 }
 ```
 
-미들웨어는 또한 클래스로 정의될 수 있으며, `IMiddleware` 인터페이스를 구현하거나 미들웨어 규칙을 따를 수 있습니다. 자세한 내용은 [사용자 정의 ASP.NET Core 미들웨어 작성]을 참조하십시오.
+미들웨어는 또한 클래스로 정의될 수 있으며, `IMiddleware` 인터페이스를 구현하거나 미들웨어 규칙을 따를 수 있습니다. 자세한 내용은 `사용자 정의 ASP.NET Core 미들웨어 작성`을 참조하십시오.
  
 ---
 ## 출처

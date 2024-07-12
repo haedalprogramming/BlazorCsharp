@@ -12,29 +12,30 @@
   - [앱에서 구성 읽기](#앱에서-구성-읽기)
   - [강력한 형식의 구성](#강력한-형식의-구성)
   - [출처](#출처)
+  - [다음](#다음)
 
 ---
 
-Web Forms에서 앱 구성을 로드하는 주요 방법은 서버의 *web.config* 파일 또는 *web.config*에서 참조하는 관련 구성 파일에 항목을 추가하는 것입니다. `ConfigurationManager` 정적 객체를 사용하여 앱 설정, 데이터 저장소 연결 문자열 및 앱에 추가된 기타 확장 구성 공급자와 상호작용할 수 있습니다. 다음 코드에서 볼 수 있듯이 앱 구성과 상호작용하는 것이 일반적입니다:
+앱 구성 로드의 주요 방법은 서버의 *web.config* 파일 또는 관련 구성 파일에 항목을 추가하는 것입니다. `ConfigurationManager` 정적 객체를 사용하여 앱 설정, 데이터 저장소 연결 문자열 및 기타 구성 공급자와 상호작용할 수 있습니다. 다음 코드에서 볼 수 있듯이 앱 구성과 상호작용하는 것이 일반적입니다:
 
 ```csharp
 var configurationValue = ConfigurationManager.AppSettings["ConfigurationSettingName"];
 var connectionString = ConfigurationManager.ConnectionStrings["MyDatabaseConnectionName"].ConnectionString;
 ```
 
-ASP.NET Core 및 서버 측 Blazor에서는 앱이 Windows IIS 서버에 호스팅되는 경우 *web.config* 파일이 존재할 수 있습니다. 그러나 이 구성과의 `ConfigurationManager` 상호작용은 없으며, 다른 소스로부터 더 구조화된 앱 구성을 받을 수 있습니다. 이제 구성 정보를 수집하는 방법과 *web.config* 파일에서 구성 정보를 여전히 액세스할 수 있는 방법을 살펴보겠습니다.
+ASP.NET Core 및 서버 측 Blazor에서는 *web.config* 파일이 존재할 수 있지만, `ConfigurationManager`와의 상호작용은 없습니다. 대신 다른 소스에서 더 구조화된 앱 구성을 받습니다. 이제 구성 정보를 수집하는 방법과 *web.config* 파일에서 구성 정보를 여전히 액세스할 수 있는 방법을 살펴보겠습니다.
 
 ## 구성 소스
 
-ASP.NET Core는 앱에 사용하려는 많은 구성 소스가 있음을 인식합니다. 프레임워크는 기본적으로 이러한 기능 중 최상의 기능을 제공하려고 합니다. 구성은 이러한 다양한 소스에서 읽고 집계됩니다. 동일한 구성 키에 대해 나중에 로드된 값이 이전 값보다 우선합니다.
+ASP.NET Core는 앱에 사용할 수 있는 다양한 구성 소스를 인식합니다. 프레임워크는 기본적으로 이러한 소스 중 최상의 기능을 제공하려고 합니다. 구성은 다양한 소스에서 읽고 집계되며, 동일한 구성 키에 대해 나중에 로드된 값이 이전 값보다 우선합니다.
 
-ASP.NET Core는 클라우드를 인식하고 운영자와 개발자 모두에게 앱 구성을 더 쉽게 만들기 위해 설계되었습니다. ASP.NET Core는 환경을 인식하고 `Production` 또는 `Development` 환경에서 실행 중인지 알고 있습니다. 환경 지시자는 `ASPNETCORE_ENVIRONMENT` 시스템 환경 변수에 설정됩니다. 값이 구성되지 않은 경우, 앱은 기본적으로 `Production` 환경에서 실행됩니다.
+ASP.NET Core는 클라우드를 인식하고 운영자와 개발자 모두에게 앱 구성을 더 쉽게 만들기 위해 설계되었습니다. ASP.NET Core는 환경을 인식하고 `Production` 또는 `Development` 환경에서 실행 중인지 알고 있으며, 환경 지시자는 `ASPNETCORE_ENVIRONMENT` 시스템 환경 변수에 설정됩니다. 값이 구성되지 않은 경우, 앱은 기본적으로 `Production` 환경에서 실행됩니다.
 
 앱은 환경의 이름을 기반으로 여러 소스에서 구성을 트리거하고 추가할 수 있습니다. 기본적으로 구성은 다음 리소스에서 나열된 순서대로 로드됩니다:
 
-1. *appsettings.json* 파일이 있으면
-1. *appsettings.{ENVIRONMENT_NAME}.json* 파일이 있으면
-1. 사용자 비밀 파일이 디스크에 있으면
+1. *appsettings.json* 파일
+1. *appsettings.{ENVIRONMENT_NAME}.json* 파일
+1. 사용자 비밀 파일 (디스크에 저장된 경우)
 1. 환경 변수
 1. 명령줄 인수
 
@@ -55,16 +56,11 @@ ASP.NET Core는 클라우드를 인식하고 운영자와 개발자 모두에게
 }
 ```
 
-위의 JSON이 제공되면, 구성 시스템은 자식 값을 평탄화하고 계층 구조 경로의 완전히 정의된 경로를 참조합니다. 계층 구조에서 각 속성은 콜론(`:`) 문자로 구분됩니다. 예를 들어, `section1:key0` 구성 키는 `section1` 객체의 `key0` 값을 액세스합니다.
+위의 JSON이 제공되면, 구성 시스템은 자식 값을 평탄화하고 계층 구조 경로의 완전히 정의된 경로를 참조합니다. 예를 들어, `section1:key0` 구성 키는 `section1` 객체의 `key0` 값을 액세스합니다.
 
 ## 사용자 비밀
 
-사용자 비밀은:
-
-* 앱 개발 폴더 외부의 개발자 워크스테이션에 있는 JSON 파일에 저장된 구성 값입니다.
-* `Development` 환경에서 실행 중일 때만 로드됩니다.
-* 특정 앱과 연관됩니다.
-* .NET CLI의 `user-secrets` 명령을 사용하여 관리됩니다.
+사용자 비밀은 앱 개발 폴더 외부의 개발자 워크스테이션에 있는 JSON 파일에 저장된 구성 값입니다. 이는 `Development` 환경에서 실행 중일 때만 로드되며 특정 앱과 연관됩니다. .NET CLI의 `user-secrets` 명령을 사용하여 관리됩니다.
 
 앱을 비밀 저장소에 설정하려면 `user-secrets` 명령을 실행하십시오:
 
@@ -72,23 +68,21 @@ ASP.NET Core는 클라우드를 인식하고 운영자와 개발자 모두에게
 dotnet user-secrets init
 ```
 
-위의 명령은 프로젝트 파일에 `UserSecretsId` 요소를 추가합니다. 이 요소에는 비밀과 앱을 연관시키는 GUID가 포함됩니다. 그런 다음 `set` 명령으로 비밀을 정의할 수 있습니다. 예를 들어:
+이 명령은 프로젝트 파일에 `UserSecretsId` 요소를 추가합니다. 그런 다음 `set` 명령으로 비밀을 정의할 수 있습니다:
 
 ```dotnetcli
 dotnet user-secrets set "Parent:ApiKey" "12345"
 ```
 
-위의 명령은 개발자 워크스테이션에서 `Parent:ApiKey` 구성 키를 값 `12345`로 사용할 수 있게 합니다.
-
-사용자 비밀 생성, 저장 및 관리에 대한 자세한 내용은 [ASP.NET Core의 개발 중 앱 비밀 안전 저장] 문서를 참조하십시오.
+위의 명령은 개발자 워크스테이션에서 `Parent:ApiKey` 구성 키를 값 `12345`로 사용할 수 있게 합니다. 
 
 ## 환경 변수
 
-다음으로 로드된 값 집합은 시스템의 환경 변수입니다. 이제 구성 API를 통해 시스템의 모든 환경 변수 설정에 액세스할 수 있습니다. 계층 구조 값은 앱 내에서 읽을 때 평탄화되고 콜론 문자로 구분됩니다. 그러나 일부 운영 체제는 환경 변수 이름에서 콜론 문자를 허용하지 않습니다. ASP.NET Core는 액세스할 때 두 개의 밑줄(`__`)이 있는 값을 콜론으로 변환하여 이 제한을 해결합니다. 위의 사용자 비밀 섹션에서 `Parent:ApiKey` 값은 환경 변수 `Parent__ApiKey`로 재정의할 수 있습니다.
+다음으로 로드된 값 집합은 시스템의 환경 변수입니다. 이제 구성 API를 통해 시스템의 모든 환경 변수 설정에 액세스할 수 있습니다. 계층 구조 값은 앱 내에서 읽을 때 평탄화되고 콜론 문자로 구분됩니다. 그러나 일부 운영 체제는 환경 변수 이름에서 콜론 문자를 허용하지 않기 때문에, ASP.NET Core는 두 개의 밑줄(`__`)이 있는 값을 콜론으로 변환하여 이 제한을 해결합니다. 예를 들어, `Parent:ApiKey` 값은 환경 변수 `Parent__ApiKey`로 재정의할 수 있습니다.
 
 ## 명령줄 인수
 
-구성은 앱이 시작될 때 명령줄 인수로 제공될 수도 있습니다. 설정할 구성 값의 이름을 표시하고 구성할 값을 표시하려면 더블 대시(`--`) 또는 슬래시(`/`) 표기법을 사용하십시오. 구문은 다음 명령과 유사합니다:
+구성은 앱이 시작될 때 명령줄 인수로 제공될 수도 있습니다. 설정할 구성 값의 이름을 표시하고 구성할 값을 표시하려면 더블 대시(`--`) 또는 슬래시(`/`) 표기법을 사용하십시오. 구문은 다음과 같습니다:
 
 ```dotnetcli
 dotnet run CommandLineKey1=value1 --CommandLineKey2=value2 /CommandLineKey3=value3
@@ -134,7 +128,7 @@ dotnet run Parent:ApiKey=67890
 
 ## 앱에서 구성 읽기
 
-ASP.NET Core는 `IConfiguration` 인터페이스를 통해 앱 구성을 제공합니다. 이 구성 인터페이스는 Blazor 구성 요소, Blazor 페이지 및 구성에 액세스해야 하는 기타 ASP.NET Core 관리 클래스에서 요청해야 합니다. ASP.NET Core 프레임워크는 이전에 구성된 해결된 구성으로 이 인터페이스를 자동으로 채울 것입니다. Blazor 페이지 또는 구성 요소의 Razor 마크업에서, *razor* 파일 상단에 `@inject` 지시문을 사용하여 `IConfiguration` 객체를 주입할 수 있습니다:
+ASP.NET Core는 `IConfiguration` 인터페이스를 통해 앱 구성을 제공합니다. 이 구성 인터페이스는 Blazor 구성 요소, Blazor 페이지 및 구성에 액세스해야 하는 기타 ASP.NET Core 관리 클래스에서 요청할 수 있습니다. ASP.NET Core 프레임워크는 이전에 구성된 해결된 구성으로 이 인터페이스를 자동으로 채울 것입니다. Blazor 페이지 또는 구성 요소의 Razor 마크업에서, *razor* 파일 상단에 `@inject` 지시문을 사용하여 `IConfiguration` 객체를 주입할 수 있습니다:
 
 ```razor
 @inject IConfiguration Configuration
@@ -152,14 +146,7 @@ var mySetting = Configuration["section1:key0"];
 
 ## 강력한 형식의 구성
 
-Web Forms에서는 `ConfigurationSection` 형식과 관련 형식에서 상속된 강력한 형식의 구성 형식을 만들 수 있었습니다. `ConfigurationSection`을 사용하면 이러한 구성 값에 대한 비즈니스 규칙과 처리를 구성할 수 있었습니다.
-
-ASP.NET Core에서는 구성 값을 받을 클래스 계층 구조를 지정할 수 있습니다. 이러한 클래스는:
-
-* 부모 클래스에서 상속할 필요가 없습니다.
-* 캡처하려는 구성 구조에 대한 속성 및 타입 참조와 일치하는 `public`
-
- 속성을 포함해야 합니다.
+ASP.NET Core에서는 구성 값을 받을 클래스 계층 구조를 지정할 수 있습니다. 이러한 클래스는 부모 클래스에서 상속할 필요 없이 캡처하려는 구성 구조에 대한 속성 및 타입 참조와 일치하는 `public` 속성을 포함해야 합니다.
 
 앞서의 *appsettings.json* 예제를 위해 다음 클래스를 정의하여 값을 캡처할 수 있습니다:
 
@@ -201,3 +188,5 @@ services.Configure<MyConfig>(Configuration);
 ## 출처
 [App configuration](https://learn.microsoft.com/en-us/dotnet/architecture/blazor-for-web-forms-developers/config)
 
+---
+## [다음](./13_Blazor를_사용하여_첫_번째_웹앱_빌드.md)

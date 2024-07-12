@@ -7,7 +7,12 @@
 
 ## 목차
   - [Web개발의 이해](./content/01_Web_개발의_이해.md)
+  - [웹 서버, 웹 애플리케이션 서버, 클라이언트 구조와 상호작용](./content/01_01_Web_구조와_상호작용.md)
+  - [URI와 URL의 이해](./content/01_02_URI_URL.md)
   - [Frontend 소개](./content/02_Frontend_소개.md)
+  - [HTML, CSS, JavaScript의 관계와 상호작용](./content/02_01_HTML_CSS_JavaScript의_관계와_상호작용.md)
+  - [프론트엔드 프레임워크의 기능](./content/02_02_Forntend_framework.md)
+  - [프론트엔드 웹 디자인](./content/02_03_Forntend_Web_Design.md)
   - [Blazor 소개](./content/03_Blazor_소개.md)
   - [HTML 언어 베이직](./content/04_HTML_기초.md)
   - [CSS 언어 베이직](./content/05_CSS_기초.md)

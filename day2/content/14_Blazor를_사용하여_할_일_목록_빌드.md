@@ -295,4 +295,4 @@ Counter 구성 요소는 현재 앱에서 유일한 대화형 구성 요소이�
 [Microsoft learn Blazor를 사용하여 할 일 목록 빌드](https://learn.microsoft.com/ko-kr/training/modules/build-blazor-todo-list/)
 
 ---
-## [다음](./04_Blazor_웹앱에서_데이터와_상호_작용.md)
+## [다음](./15_Blazor를_사용하여_커넥트_4게임_빌드.md)
