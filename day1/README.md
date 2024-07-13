@@ -16,6 +16,7 @@
   - [Blazor 소개](./content/03_Blazor_소개.md)
   - [HTML 언어 베이직](./content/04_HTML_기초.md)
   - [CSS 언어 베이직](./content/05_CSS_기초.md)
+  - [HTML & CSS를 사용한 정적인 자기소개 페이지 만들기](./content/04_05_practice.md)
   - [JS 언어 베이직](./content/06_JS_기초.md)
   - [C# 언어 베이직](./content/07_CSharp_기초.md)
   - [환경 설정](./content/08_환경설정.md)

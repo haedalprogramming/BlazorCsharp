@@ -6295,4 +6295,4 @@ outline은 요소의 외부 테두리에 선을 그리는 것을 의미합니다
 ## 출처
  - [Tutorialspoint CSS - Quick Guide](https://www.tutorialspoint.com/css/css_quick_guide.htm)
 ---
-## [다음](./06_JS_기초.md)
+## [다음](./04_05_practice.md)
