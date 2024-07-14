@@ -30,7 +30,6 @@
     - [작업 확인](#작업-확인-1)
   - [요약](#요약)
   - [출처](#출처)
-  - [다음](#다음)
 ---
 
 ## Razor 클래스 라이브러리 소개
@@ -541,6 +540,3 @@ Blazor 구성 요소는 더 복잡한 애플리케이션을 쉽게 빌드할 수
 ---
 ## 출처
  - [Microsoft learn Build reusable components with Blazor](https://learn.microsoft.com/en-us/training/modules/blazor-build-reusable-components/)
-
----
-## [다음](./09_Blazor를_사용하여_커넥트_4게임_빌드.md)

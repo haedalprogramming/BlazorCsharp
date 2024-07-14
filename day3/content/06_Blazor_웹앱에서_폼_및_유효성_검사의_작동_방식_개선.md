@@ -445,7 +445,7 @@ Blazing Pizza 앱을 개선하는 작업을 수행하는 개발 팀의 일원으
 이 모듈에서는 로컬 개발에 .NET CLI(명령줄 인터페이스) 및 Visual Studio Code를 사용합니다. 이 모듈을 완료하면 Visual Studio(Windows), Mac용 Visual Studio(macOS) 또는 Visual Studio Code(Windows, Linux 및 macOS)를 사용한 연속 개발을 사용하여 개념을 적용할 수 있습니다.
 ```
 
-이 모듈에서는 .NET 6.0 SDK를 사용합니다. 기본 설정 터미널에서 다음 명령을 실행하여 .NET 6.0이 설치되어 있는지 확인합니다.
+이 모듈에서는 `.NET 6.0 SDK`를 사용합니다. 기본 설정 터미널에서 다음 명령을 실행하여 .NET 6.0이 설치되어 있는지 확인합니다.
 
 ```bash
 dotnet --list-sdks
@@ -459,28 +459,28 @@ dotnet --list-sdks
 6.0.100 [C:\program files\dotnet\sdk]
 ```
 
-6으로 시작하는 버전이 나열되어 있는지 확인합니다. 나열되는 버전이 없거나 명령을 찾을 수 없는 경우 [최신 .NET 6.0 SDK](https://dotnet.microsoft.com/download)를 설치합니다.
+6으로 시작하는 버전이 나열되어 있는지 확인합니다. 나열되는 버전이 없거나 명령을 찾을 수 없는 경우 [최신 .NET 6.0 SDK](https://dotnet.microsoft.com/ko-kr/download/dotnet)를 설치합니다.
 
 이전에 Blazor 앱을 만든 적이 없는 경우 [Blazor 설치 지침](https://aka.ms/blazor-getting-started)에 따라 올바른 버전의 .NET을 설치하고 컴퓨터가 올바르게 설정되었는지 확인합니다. 앱 만들기 단계에서 중지합니다.
 
-1. Visual Studio Code를 사용하여 ASP.NET 5 API 앱을 만드는 방법을 보여줍니다.
-2. 주 메뉴에서 보기를 선택한 다음 터미널을 선택하여 Visual Studio Code의 통합 터미널을 엽니다.
+1. Visual Studio Code를 사용하여 ASP.NET 6 API 앱을 만드는 방법을 보여줍니다.
+2. 주 메뉴에서 `보기`를 선택한 다음 `터미널`을 선택하여 Visual Studio Code의 통합 터미널을 엽니다.
 3. 터미널에서 프로젝트를 만들려는 위치로 이동합니다.
 4. GitHub에서 앱을 복제합니다.
     ```bash
     git clone https://github.com/MicrosoftDocs/mslearn-use-forms-in-blazor-web-apps.git BlazingPizza
     ```
-5. 파일을 선택한 폴더 열기...를 선택합니다.
-6. 열기 대화 상자에서 BlazingPizza 폴더로 이동하고 폴더 선택을 선택합니다.<br>Visual Studio Code에서 해결되지 않은 종속성에 대한 메시지가 표시될 수 있습니다. 복원을 선택합니다.
+5. 파일 탭의 `폴더 열기...`를 선택합니다.
+6. 열기 대화 상자에서 `BlazingPizza` 폴더로 이동하고 폴더 선택을 선택합니다.<br>Visual Studio Code에서 해결되지 않은 종속성에 대한 메시지가 표시될 수 있습니다. 복원을 선택합니다.
 7. 앱을 실행하여 모든 것이 제대로 작동하는지 확인합니다.
-8. Visual Studio Code에서 F5 키를 누르거나 실행>디버깅 시작을 선택합니다.
+8. Visual Studio Code에서 `F5` 키를 누르거나 `실행>디버깅 시작`을 선택합니다.
     ![](../img/06_Blazor_웹앱에서_폼_및_유효성_검사의_작동_방식_개선/3-blazing-pizza-starting-state.png)
     일부 피자를 구성하고 주문에 추가해 봅니다. 페이지 하단에서 주문 >을 선택합니다. 현재 체크 아웃 페이지가 표시됩니다.
-9. Shift + F5 키를 눌러 앱 실행을 중지합니다.
+9. `Shift + F5` 키를 눌러 앱 실행을 중지합니다.
 
 ### 체크 아웃 페이지 리팩터링
 
-1. Visual Studio Code의 파일 탐색기에서 페이지를 확장한 다음, Checkout.razor를 선택합니다.<br>현재, 체크 아웃 페이지에는 구성된 피자의 목록만 표시됩니다. 주소 섹션을 포함하도록 페이지를 리팩터링하라는 요청을 받았습니다.
+1. Visual Studio Code의 파일 탐색기에서 `Pages`를 확장한 다음, `Checkout.razor`를 선택합니다.<br>현재, 체크 아웃 페이지에는 구성된 피자의 목록만 표시됩니다. 주소 섹션을 포함하도록 페이지를 리팩터링하라는 요청을 받았습니다.
 2. 기존 HTML \<div class="main"> 블록을 두 개의 데이터 열로 바꿉니다.
     ```razor
     <div class="main">
@@ -501,10 +501,10 @@ dotnet --list-sdks
         </button>
     </div>
     ```
-    앞의 코드는 단추 요소의 HTML onclick 이벤트를 @code 블록의 PlaceOrder Blazor 메서드에 연결합니다.<br>
-    리팩터링은 두 개의 새 Blazor 컨트롤 OrderReview 및 AddressEditor를 참조합니다. 피자를 나열한 이전의 체크 아웃 코드를 OrderReview 구성 요소로 이동합니다.
-3. 파일 탐색기에서 공유를 마우스 오른쪽 단추로 클릭한 다음, 새 파일을 선택합니다.
-4. 파일 이름으로 OrderReview.razor를 입력합니다.
+    앞의 코드는 단추 요소의 HTML `onclick` 이벤트를 `@code` 블록의 `PlaceOrder` Blazor 메서드에 연결합니다.<br>
+    리팩터링은 두 개의 새 Blazor 컨트롤 `OrderReview` 및 `AddressEditor`를 참조합니다. 피자를 나열한 이전의 체크 아웃 코드를 `OrderReview` 구성 요소로 이동합니다.
+3. 파일 탐색기에서 `Shared` 폴더를 마우스 오른쪽 단추로 클릭한 다음, 새 파일을 선택합니다.
+4. 파일 이름으로 `OrderReview.razor`를 입력합니다.
 5. 주문에서 피자를 표시하는 foreach 루프를 추가합니다.
     ```razor
     @foreach (var pizza in Order.Pizzas)
@@ -529,9 +529,9 @@ dotnet --list-sdks
         [Parameter] public Order Order { get; set; }
     }
     ```
-6. 파일 탐색기에서 공유를 마우스 오른쪽 단추로 클릭한 다음, 새 파일을 선택합니다.
-7. 파일 이름으로 AddressEditor.razor를 입력합니다.
-8. 주소의 각 필드에 input 요소를 사용하는 코드를 추가합니다. 모델 폴더의 Address 클래스는 모든 필드를 표시합니다.
+6. 파일 탐색기에서 `Shared`를 마우스 오른쪽 단추로 클릭한 다음, 새 파일을 선택합니다.
+7. 파일 이름으로 `AddressEditor.razor`를 입력합니다.
+8. 주소의 각 필드에 `input` 요소를 사용하는 코드를 추가합니다. 모델 폴더의 `Address` 클래스는 모든 필드를 표시합니다.
     ```razor
     <div class="form-field">
         <label>Name:</label>
@@ -581,21 +581,21 @@ dotnet --list-sdks
     ```
 
 ### 새 체크 아웃 페이지 테스트
-1. Visual Studio Code에서 F5 키를 누르거나 실행>디버깅 시작을 선택합니다.
+1. Visual Studio Code에서 `F5` 키를 누르거나 `실행>디버깅 시작`을 선택합니다.
     ![](../img/06_Blazor_웹앱에서_폼_및_유효성_검사의_작동_방식_개선/3-new-checkout-page.png)
     피자를 추가하고 주문 >을 선택하여 새 체크 아웃 흐름을 확인합니다.
-2. Shift + F5 키를 눌러 앱 실행을 중지합니다.
+2. `Shift + F5` 키를 눌러 앱 실행을 중지합니다.
 
 ### 양식의 유용성 향상
 
 고객은 체크 아웃 페이지로 이동되면 가장 먼저 이름을 입력합니다. Blazor를 사용하면 페이지의 HTML 요소에 포커스를 설정할 수 있습니다. 이를 추가하여 앱을 개선해 보겠습니다.
 
-1. AddressEditor.razor에서 이름 input 요소의 HTML을 변경하여 @ref="startName"을(를) 추가합니다.
+1. `AddressEditor.razor`에서 이름 `input` 요소의 HTML을 변경하여 `@ref="startName"`을(를) 추가합니다.
     ```razor
     <input @ref="startName" @bind="Address.Name" />
     ```
-    Blazor 지시문 @ref="startName"을 사용하면 코드 블록이 입력 요소를 참조하는 ElementReference를 만들 수 있습니다. 그런 다음 이 요소 참조를 사용하여 페이지가 렌더링된 후 FocusAsync를 호출할 수 있습니다.
-2. 페이지가 [Parameter] public Address Address { get; set; } 선언 아래에 로드된 후 FocusAsync를 호출할 코드를 추가합니다.
+    Blazor 지시문 `@ref="startName"`을 사용하면 코드 블록이 입력 요소를 참조하는 `ElementReference`를 만들 수 있습니다. 그런 다음 이 요소 참조를 사용하여 페이지가 렌더링된 후 `FocusAsync`를 호출할 수 있습니다.
+2. 페이지가 `[Parameter] public Address Address { get; set; }` 선언 아래에 로드된 후 FocusAsync를 호출할 코드를 추가합니다.
     ```razor
     private ElementReference startName;
 

@@ -278,4 +278,4 @@ Click me 단추를 선택할 때마다
 [Microsoft learn Blazor를 사용하여 첫 번째 웹앱 빌드](https://learn.microsoft.com/ko-kr/training/modules/build-your-first-blazor-web-app/)
 
 ---
-## [다음](./03_Blazor를_사용하여_할_일_목록_빌드.md)
+## [다음](./14_Blazor를_사용하여_할_일_목록_빌드.md)

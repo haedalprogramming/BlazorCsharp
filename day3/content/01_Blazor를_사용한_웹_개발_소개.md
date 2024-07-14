@@ -140,4 +140,4 @@ Blazor는 다음과 같은 경우 적합하지 않을 수 있습니다.
 [Microsoft learn Blazor를 사용하여 웹앱 빌드](https://learn.microsoft.com/ko-kr/training/paths/build-web-apps-with-blazor/)
 
 ---
-## [다음](./02_Blazor를_사용하여_첫_번째_웹앱_빌드.md)
+## [다음](./04_Blazor_웹앱에서_데이터와_상호_작용.md)

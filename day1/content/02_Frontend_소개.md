@@ -264,9 +264,8 @@ AJAX라는 기술을 사용하여 자바스크립트 코드는 원래의 HTML �
  - [Wikipedia Frontend and backend](https://en.wikipedia.org/wiki/Frontend_and_backend)
  - [Wikipedia Front-end web development](https://en.wikipedia.org/wiki/Front-end_web_development)
 
-
 ---
-## [다음](./03_Blazor_소개.md)
+## [다음](./02_01_HTML_CSS_JavaScript의_관계와_상호작용.md)
 
 
 

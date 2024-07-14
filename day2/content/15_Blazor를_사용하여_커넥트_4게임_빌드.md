@@ -38,7 +38,6 @@
     - [매개변수를 사용하여 보드 커스터마이징하기](#매개변수를-사용하여-보드-커스터마이징하기)
   - [요약](#요약-1)
   - [출처](#출처)
-  - [다음](#다음)
 ---
 ## 소개
 
@@ -704,6 +703,3 @@ Blazor에서 매개변수는 `Parameter` 속성으로 장식된 컴포넌트 내
 ---
 ## 출처
  - [Microsoft learn Build a Connect Four game with Blazor](https://learn.microsoft.com/en-us/training/modules/dotnet-connect-four/)
-
----
-## [다음]()

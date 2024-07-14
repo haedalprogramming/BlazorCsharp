@@ -13,44 +13,11 @@
 
 ---
 
-ASP.NET Web Forms 앱은 *.aspx* 파일에 정의된 페이지로 구성됩니다. 각 페이지의 주소는 프로젝트의 물리적 파일 경로를 기반으로 합니다. 브라우저가 페이지에 요청을 하면 페이지의 내용이 서버에서 동적으로 렌더링됩니다. 이 렌더링은 페이지의 HTML 마크업과 서버 컨트롤을 모두 포함합니다.
-
-Blazor에서 앱의 각 페이지는 일반적으로 *.razor* 파일에 정의된 컴포넌트이며, 하나 이상의 지정된 라우트를 가집니다. 라우팅은 주로 클라이언트 측에서 발생하며, 특정 서버 요청을 수반하지 않습니다. 브라우저는 먼저 앱의 루트 주소에 요청을 보냅니다. Blazor 앱의 루트 `Router` 컴포넌트가 탐색 요청을 가로채고 올바른 컴포넌트로 전달합니다.
+Blazor는 .NET 개발 환경에서 최신 웹 애플리케이션을 개발할 수 있는 강력한 프레임워크입니다. 각 페이지는 일반적으로 *.razor* 파일에 정의된 컴포넌트로 구성되며, 하나 이상의 지정된 라우트를 가집니다. 라우팅은 주로 클라이언트 측에서 발생하며, 특정 서버 요청을 수반하지 않습니다. 브라우저는 먼저 앱의 루트 주소에 요청을 보냅니다. Blazor 앱의 루트 `Router` 컴포넌트가 탐색 요청을 가로채고 올바른 컴포넌트로 전달합니다.
 
 Blazor는 또한 *딥 링크*를 지원합니다. 딥 링크는 브라우저가 앱의 루트가 아닌 특정 경로에 요청을 보낼 때 발생합니다. 서버로 전송된 딥 링크 요청은 Blazor 앱으로 라우팅되며, 이후 해당 요청을 클라이언트 측에서 올바른 컴포넌트로 라우팅합니다.
 
-ASP.NET Web Forms의 간단한 페이지는 다음과 같은 마크업을 포함할 수 있습니다:
-
-*Name.aspx*
-
-```aspx-csharp
-<%@ Page Title="Name" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Name.aspx.cs" Inherits="WebApplication1.Name" %>
-
-<asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <div>
-        What is your name?<br />
-        <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
-        <asp:Button ID="Button1" runat="server" Text="Submit" OnClick="Button1_Click" />
-    </div>
-    <div>
-        <asp:Literal ID="Literal1" runat="server" />
-    </div>
-</asp:Content>
-```
-
-*Name.aspx.cs*
-
-```csharp
-public partial class Name : System.Web.UI.Page
-{
-    protected void Button1_Click1(object sender, EventArgs e)
-    {
-        Literal1.Text = "Hello " + TextBox1.Text;
-    }
-}
-```
-
-Blazor 앱에서의 동등한 페이지는 다음과 같습니다:
+다음은 Blazor에서 간단한 페이지를 구성하는 예입니다:
 
 *Name.razor*
 
@@ -88,7 +55,7 @@ Blazor에서 페이지를 생성하려면 컴포넌트를 생성하고 `@page` R
 @page "/counter"
 ```
 
-경로 템플릿 매개변수는 필수입니다. ASP.NET Web Forms와 달리 Blazor 컴포넌트의 경로는 파일 위치에서 추론되지 않습니다(이 기능은 나중에 추가될 수 있습니다).
+경로 템플릿 매개변수는 필수입니다. Blazor 컴포넌트의 경로는 파일 위치에서 추론되지 않습니다(이 기능은 나중에 추가될 수 있습니다).
 
 경로 템플릿 구문은 ASP.NET Web Forms의 라우팅에서 사용되는 기본 구문과 동일합니다. 경로 매개변수는 중괄호를 사용하여 템플릿에 지정됩니다. Blazor는 경로 값을 동일한 이름(대소문자 구분 안 함)의 컴포넌트 매개변수에 바인딩합니다.
 
@@ -143,17 +110,6 @@ Blazor에서 라우팅은 `Router` 컴포넌트에 의해 처리됩니다. `Rout
 
 ## 탐색
 
-ASP.NET Web Forms에서는 리디렉션 응답을 브라우저에 반환하여 다른 페이지로 탐색을 트리거합니다. 예를 들어:
-
-```csharp
-protected void NavigateButton_Click(object sender, EventArgs e)
-{
-    Response.Redirect("Counter");
-}
-```
-
-리디렉션 응답을 반환하는 것은 Blazor에서는 일반적으로 불가능합니다. Blazor는 요청-응답 모델을 사용하지 않습니다. 그러나 JavaScript와 마찬가지로 브라우저 탐색을 직접 트리거할 수 있습니다.
-
 Blazor는 `NavigationManager` 서비스를 제공하여 다음을 수행할 수 있습니다:
 
 - 현재 브라우저 주소 가져오기
@@ -188,36 +144,6 @@ Blazor 앱이 기본 경로 아래에 배포된 경우 라우팅이 올바르게
 
 ## 페이지 레이아웃
 
-ASP.NET Web Forms에서는 Master Pages를 사용하여 페이지 레이아웃을 처리합니다. Master Pages는 하나 이상의 콘텐츠 플레이스홀더가 있는 템플릿을 정의하며, 각 페이지에서 이를 제공합니다. Master Pages는 *.master* 파일에 정의되며 `<%@ Master %>` 지시어로 시작합니다. *.master* 파일의 내용은 *.aspx* 페이지처럼 코딩되지만, `<asp:ContentPlaceHolder>` 컨트롤을 추가하여 페이지가 콘텐츠를 제공할 수 있는 위치를 표시합니다.
-
-*Site.master*
-
-```aspx-csharp
-<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="WebApplication1.SiteMaster" %>
-
-<!DOCTYPE html>
-<html lang="en">
-<head runat="server">
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%: Page.Title %> - My ASP.NET Application</title>
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-</head>
-<body>
-    <form runat="server">
-        <div class="container body-content">
-            <asp:ContentPlaceHolder ID="MainContent" runat="server">
-            </asp:ContentPlaceHolder>
-            <hr />
-            <footer>
-                <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
-            </footer>
-        </div>
-    </form>
-</body>
-</html>
-```
-
 Blazor에서는 레이아웃 컴포넌트를 사용하여 페이지 레이아웃을 처리합니다. 레이아웃 컴포넌트는 `LayoutComponentBase`를 상속하며, 단일 `Body` 속성(타입: `RenderFragment`)을 정의하여 페이지의 내용을 렌더링하는 데 사용합니다.
 
 *MainLayout.razor*
@@ -240,9 +166,7 @@ Blazor에서는 레이아웃 컴포넌트를 사용하여 페이지 레이아웃
 
 폴더 및 하위 폴더의 모든 컴포넌트에 대해 레이아웃을 지정하려면 *_Imports.razor* 파일을 사용할 수 있습니다. 또한 Router 컴포넌트를 사용하여 모든 페이지의 기본 레이아웃을 지정할 수 있습니다.
 
-Master Pages는 여러 콘텐츠 플레이스홀더를 정의할 수 있지만, Blazor의 레이아웃은 단일 `Body` 속성만 가집니다. Blazor 레이아웃 컴포넌트의 이 제한 사항은 향후 릴리스에서 해결될 것으로 기대됩니다.
-
-ASP.NET Web Forms의 Master Pages는 중첩될 수 있습니다. 즉, Master Page가 다른 Master Page를 사용할 수 있습니다. Blazor의 레이아웃 컴포넌트도 중첩될 수 있습니다. 레이아웃 컴포넌트를 레이아웃 컴포넌트에 적용할 수 있습니다. 내부 레이아웃의 내용은 외부 레이아웃 내에서 렌더링됩니다.
+Blazor의 레이아웃 컴포넌트는 중첩될 수 있습니다. 레이아웃 컴포넌트를 레이아웃 컴포넌트에 적용할 수 있습니다. 내부 레이아웃의 내용은 외부 레이아웃 내에서 렌더링됩니다.
 
 *ChildLayout.razor*
 
